@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h> // for fprintf
 #include "AnyType.hpp"
 #include "Exception.hpp"
 

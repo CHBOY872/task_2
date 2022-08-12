@@ -1,6 +1,6 @@
 #include "Exception.hpp"
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h>  // for sprintf
+#include <string.h> // for strcpy
 
 ExceptionType::ExceptionType(int _size_1, int _size_2)
     : size_1(_size_1), size_2(_size_2)

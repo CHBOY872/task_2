@@ -1,7 +1,7 @@
 #ifndef EXCEPTION_HPP_SENTRY
 #define EXCEPTION_HPP_SENTRY
 
-class ExceptionType
+class ExceptionType // ExceptionType class
 {
     int size_1;
     int size_2;

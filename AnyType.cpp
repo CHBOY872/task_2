@@ -1,10 +1,10 @@
-#include <stdlib.h>
+#include <stdlib.h> // for malloc, free
 
 #include "Exception.hpp"
 #include "AnyType.hpp"
 
-class UnTypedMPunsafe
-{
+class UnTypedMPunsafe // unsafe point
+{                     // inaccessible for clients
     friend class UnTypedMP;
     friend class AnyType;
     void *var;
