@@ -1,20 +1,24 @@
+#include <stdio.h>
 #include "AnyType.hpp"
-#include <iostream>
-using namespace std;
+#include "Exception.hpp"
 
 int main()
 {
-    AnyType x(90);
-    AnyType y = 1.53;
-    y = x;
-    x = y;
-    AnyType c = x;
-    AnyType d;
-    d = c;
-    d.Destroy();
-    d = x;
-
-    d.Swap(x);
+    try
+    {
+        int x;
+        AnyType y = 90;
+        y = false;
+        x = y.ToBool();
+    }
+    catch (ExceptionType &a)
+    {
+        fprintf(stderr, "%s\n", a.GetMsg());
+    }
+    catch (...)
+    {
+        fprintf(stderr, "Unknown exception...\n");
+    }
 
     return 0;
 }

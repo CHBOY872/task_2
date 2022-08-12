@@ -4,7 +4,7 @@ CPPFLAGS=-Wall
 ANSI=-ansi
 ISOSTD=-std=c++98
 
-SRCMODULES=AnyType.cpp
+SRCMODULES=AnyType.cpp Exception.cpp
 OBJMODULES=$(SRCMODULES:.cpp=.o)
 HPPMODULES=$(SRCMODULES:.cpp=.hpp)
 

@@ -6,7 +6,7 @@ class UnTypedMPunsafe;
 class UnTypedMP
 {
     friend class AnyType;
-    UnTypedMPunsafe u;
+    UnTypedMPunsafe *u;
 
 public:
     UnTypedMP(int _size = 0);
@@ -35,6 +35,26 @@ public:
 
     void Destroy();
     void Swap(AnyType &a);
+
+    bool ToBool();
+
+    char ToChar();
+    unsigned char ToUChar();
+
+    short ToShort();
+    unsigned short ToUShort();
+
+    int ToInt();
+    unsigned int ToUInt();
+
+    long ToLong();
+    unsigned long ToULong();
+
+    long long ToLongLong();
+    unsigned long long ToULongLong();
+
+    float ToFloat();
+    double ToDouble();
 };
 
 #endif
