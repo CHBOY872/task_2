@@ -2,25 +2,20 @@
 #define ANYTYPE_HPP_SENTRY
 
 class AnyType;
-class UnTypedMPunsafe
-{
-protected:
-    friend class AnyType;
-    void *var;
-    int size;
-
-public:
-    UnTypedMPunsafe(int _size);
-};
-
-class UnTypedMP : private UnTypedMPunsafe
+class UnTypedMPunsafe;
+class UnTypedMP
 {
     friend class AnyType;
+    UnTypedMPunsafe u;
 
 public:
     UnTypedMP(int _size = 0);
     ~UnTypedMP();
     UnTypedMP &operator=(const UnTypedMP &a);
+
+private:
+    void *GetVar();
+    int &GetSize();
 };
 
 class AnyType
@@ -32,7 +27,7 @@ public:
     template <class T>
     AnyType(T a) : ptr(new UnTypedMP(sizeof(T)))
     {
-        *(T *)ptr->var = a;
+        *(T *)ptr->GetVar() = a;
     }
     AnyType(const AnyType &a);
     ~AnyType();
