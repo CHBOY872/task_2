@@ -8,12 +8,10 @@ class UnTypedMP           // class where out object with size and
     friend class AnyType; // may be accessible for clients
     UnTypedMPunsafe *u;
 
-public:
     UnTypedMP(int _size = 0);
     ~UnTypedMP();
     UnTypedMP &operator=(const UnTypedMP &a);
 
-private:
     void *GetVar(); // access to our memory area and size;
     int &GetSize(); // accessible only for AnyType
 };
