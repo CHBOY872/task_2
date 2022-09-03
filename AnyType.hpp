@@ -1,19 +1,22 @@
 #ifndef ANYTYPE_HPP_SENTRY
 #define ANYTYPE_HPP_SENTRY
 
+#include <typeinfo>
+#include <string>
+
 class AnyType;
-class UnTypedMPunsafe;
-class UnTypedMP           // class where out object with size and
-{                         // allocated memory will.
-    friend class AnyType; // may be accessible for clients
-    UnTypedMPunsafe *u;
+class UnTypedMP
+{
+    friend class AnyType;
+    void *var;
+    std::string type;
+    unsigned char size;
 
-    UnTypedMP(int _size = 0);
+public:
+    UnTypedMP(const char *_type, unsigned char _size);
+    UnTypedMP(const UnTypedMP &a);
     ~UnTypedMP();
-    UnTypedMP &operator=(const UnTypedMP &a);
-
-    void *GetVar(); // access to our memory area and size;
-    int &GetSize(); // accessible only for AnyType
+    void *GetVar();
 };
 
 class AnyType // main AnyType class
@@ -21,18 +24,20 @@ class AnyType // main AnyType class
     UnTypedMP *ptr;
 
 public:
-    AnyType(); // default constructor
+    AnyType();
     template <class T>
     AnyType(T a) : ptr(new UnTypedMP(sizeof(T))) // conversion constructors
     {                                            // for types
         *(T *)ptr->GetVar() = a;
     }
-    AnyType(const AnyType &a); // copy constructor
+    AnyType(const AnyType &a);
+
     ~AnyType();
+
     AnyType &operator=(const AnyType &a);
 
-    void Destroy();        // destroy object
-    void Swap(AnyType &a); // Swap 2 AnyTypes objects
+    void Destroy();
+    void Swap(AnyType &a);
 
     bool ToBool();
 
@@ -53,6 +58,10 @@ public:
 
     float ToFloat();
     double ToDouble();
+
+private:
+    template <class T>
+    T ToSomeType();
 };
 
 #endif

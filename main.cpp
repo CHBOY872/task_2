@@ -6,10 +6,11 @@ int main()
 {
     try
     {
-        int x;
         AnyType y = 90;
-        y = false;
-        x = y.ToBool();
+        AnyType x(y);
+        x = 2.56;
+        x = y.ToInt();
+        int z = y.ToDouble();
     }
     catch (ExceptionType &a)
     {

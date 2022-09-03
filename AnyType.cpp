@@ -1,160 +1,123 @@
-#include <stdlib.h> // for malloc, free
+#include <iostream>
+#include <stdlib.h>
 
-#include "Exception.hpp"
 #include "AnyType.hpp"
+#include "Exception.hpp"
 
-class UnTypedMPunsafe // unsafe point
-{                     // inaccessible for clients
-    friend class UnTypedMP;
-    friend class AnyType;
-    void *var;
-    int size;
-
-public:
-    UnTypedMPunsafe(int _size);
-    ~UnTypedMPunsafe();
-};
-
-UnTypedMPunsafe::UnTypedMPunsafe(int _size)
-    : var(malloc(_size)), size(_size) {}
-UnTypedMPunsafe::~UnTypedMPunsafe() { free(var); }
-
-////////////////////////////
-
-UnTypedMP::UnTypedMP(int _size)
-    : u(new UnTypedMPunsafe(_size)) {}
-void *UnTypedMP::GetVar() { return u->var; }
-int &UnTypedMP::GetSize() { return u->size; }
-UnTypedMP::~UnTypedMP() { delete u; }
-UnTypedMP &UnTypedMP::operator=(const UnTypedMP &a)
+UnTypedMP::UnTypedMP(const char *_type, unsigned char _size)
+    : var(malloc(_size)), size(_size)
 {
-    if (this != &a)
-    {
-        delete u;
-        u = new UnTypedMPunsafe(a.u->size);
-        int i;
-        unsigned char *buf_from = (unsigned char *)a.u->var;
-        unsigned char *buf_to = (unsigned char *)u->var;
-        for (i = 0; i < u->size; i++)
-            buf_to[i] = buf_from[i];
-    }
-    return *this;
+    type = _type;
+}
+UnTypedMP::UnTypedMP(const UnTypedMP &a)
+    : var(malloc(a.size)), type(a.type), size(a.size)
+{
+    unsigned char *from = (unsigned char *)a.var;
+    unsigned char *to = (unsigned char *)var;
+    unsigned char i;
+    for (i = 0; i < size; i++)
+        *(to + i) = *(from + i);
+}
+UnTypedMP::~UnTypedMP() { free(var); }
+void *UnTypedMP::GetVar() { return var; }
+
+////////////////////////////////
+
+AnyType::AnyType() : var(0) {}
+AnyType::AnyType(const AnyType &a) : var(new UnTypedMP(*(a.var))) {}
+
+AnyType::~AnyType()
+{
+    if (var)
+        delete var;
 }
 
-////////////////////////////
-
-AnyType::AnyType() : ptr(new UnTypedMP(sizeof(void *))) {}
-AnyType::AnyType(const AnyType &a)
-{
-    ptr = new UnTypedMP(a.ptr->u->size);
-}
-AnyType::~AnyType() { delete ptr; }
-
-////////////////////////////
-
-void AnyType::Destroy()
-{
-    delete ptr;
-    ptr = 0;
-}
-void AnyType::Swap(AnyType &a)
-{
-    UnTypedMP *temp = a.ptr;
-    a.ptr = ptr;
-    ptr = temp;
-}
 AnyType &AnyType::operator=(const AnyType &a)
 {
     if (this != &a)
     {
-        if (!ptr)
-            ptr = new UnTypedMP;
-        *ptr = *a.ptr;
+        if (var)
+            delete var;
+        var = new UnTypedMP(*(a.var));
     }
     return *this;
 }
 
+void AnyType::Destroy() // destroy object
+{
+    if (var)
+        delete var;
+}
+void AnyType::Swap(AnyType &a) // Swap 2 AnyTypes objects
+{
+    UnTypedMP *tmp = a.var;
+    a.var = var;
+    var = tmp;
+}
+
 bool AnyType::ToBool()
 {
-    if (sizeof(bool) != ptr->GetSize())
-        throw ExceptionType(sizeof(bool), ptr->GetSize());
-    return *(bool *)ptr->GetVar();
+    return ToSomeType<bool>();
 }
 
 char AnyType::ToChar()
 {
-    if (sizeof(char) != ptr->GetSize())
-        throw ExceptionType(sizeof(char), ptr->GetSize());
-    return *(char *)ptr->GetVar();
+    return ToSomeType<char>();
 }
 unsigned char AnyType::ToUChar()
 {
-    if (sizeof(unsigned char) != ptr->GetSize())
-        throw ExceptionType(sizeof(unsigned char), ptr->GetSize());
-    return *(unsigned char *)ptr->GetVar();
+    return ToSomeType<unsigned char>();
 }
 
 short AnyType::ToShort()
 {
-    if (sizeof(short) != ptr->GetSize())
-        throw ExceptionType(sizeof(short), ptr->GetSize());
-    return *(short *)ptr->GetVar();
+    return ToSomeType<short>();
 }
 unsigned short AnyType::ToUShort()
 {
-    if (sizeof(unsigned short) != ptr->GetSize())
-        throw ExceptionType(sizeof(unsigned short), ptr->GetSize());
-    return *(unsigned short *)ptr->GetVar();
+    return ToSomeType<unsigned short>();
 }
 
 int AnyType::ToInt()
 {
-    if (sizeof(int) != ptr->GetSize())
-        throw ExceptionType(sizeof(int), ptr->GetSize());
-    return *(int *)ptr->GetVar();
+    return ToSomeType<int>();
 }
 unsigned int AnyType::ToUInt()
 {
-    if (sizeof(unsigned int) != ptr->GetSize())
-        throw ExceptionType(sizeof(unsigned int), ptr->GetSize());
-    return *(unsigned int *)ptr->GetVar();
+    return ToSomeType<unsigned int>();
 }
 
 long AnyType::ToLong()
 {
-    if (sizeof(long) != ptr->GetSize())
-        throw ExceptionType(sizeof(long), ptr->GetSize());
-    return *(long *)ptr->GetVar();
+    return ToSomeType<long>();
 }
 unsigned long AnyType::ToULong()
 {
-    if (sizeof(unsigned long) != ptr->GetSize())
-        throw ExceptionType(sizeof(unsigned long), ptr->GetSize());
-    return *(unsigned long *)ptr->GetVar();
+    return ToSomeType<unsigned long>();
 }
 
 long long AnyType::ToLongLong()
 {
-    if (sizeof(long long) != ptr->GetSize())
-        throw ExceptionType(sizeof(long long), ptr->GetSize());
-    return *(long long *)ptr->GetVar();
+    return ToSomeType<long long>();
 }
 unsigned long long AnyType::ToULongLong()
 {
-    if (sizeof(unsigned long long) != ptr->GetSize())
-        throw ExceptionType(sizeof(unsigned long long), ptr->GetSize());
-    return *(unsigned long long *)ptr->GetVar();
+    return ToSomeType<unsigned long long>();
 }
 
 float AnyType::ToFloat()
 {
-    if (sizeof(float) != ptr->GetSize())
-        throw ExceptionType(sizeof(float), ptr->GetSize());
-    return *(float *)ptr->GetVar();
+    return ToSomeType<float>();
 }
 double AnyType::ToDouble()
 {
-    if (sizeof(double) != ptr->GetSize())
-        throw ExceptionType(sizeof(double), ptr->GetSize());
-    return *(double *)ptr->GetVar();
+    return ToSomeType<double>();
+}
+
+template <class T>
+T AnyType::ToSomeType()
+{
+    if (std::string(typeid(T).name()) != var->type)
+        throw ExceptionType();
+    return *(T *)var->GetVar();
 }
