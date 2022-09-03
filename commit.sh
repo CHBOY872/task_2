@@ -1,6 +1,6 @@
 FILES="makefile *.cpp *.hpp *.sh"
 
-if [[-z $1]]
+if [[ -z $1 ]]
 then
     echo "type a commit"
 else
