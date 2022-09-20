@@ -26,9 +26,9 @@ class AnyType // main AnyType class
 public:
     AnyType();
     template <class T>
-    AnyType(T a) : ptr(new UnTypedMP(sizeof(T))) // conversion constructors
-    {                                            // for types
-        *(T *)ptr->GetVar() = a;
+    AnyType(T a) : ptr(new UnTypedMP(typeid(T).name(), sizeof(T)))
+    {                            // conversion constructors
+        *(T *)ptr->GetVar() = a; // for types
     }
     AnyType(const AnyType &a);
 

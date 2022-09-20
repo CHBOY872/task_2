@@ -11,6 +11,7 @@ int main()
         x = 2.56;
         x = y.ToInt();
         int z = y.ToDouble();
+        printf("%d\n", z);
     }
     catch (ExceptionType &a)
     {

@@ -13,3 +13,15 @@ HPPMODULES=$(SRCMODULES:.cpp=.hpp)
 
 main: main.cpp $(OBJMODULES)
 	$(CPP) $(CPPFLAGS) $(ANSI) -g $^ -o $@ $(ISOSTD)
+
+clean:
+	rm *.o
+
+ifneq (clean, $(MAKECMDGOALS))
+-include deps.mk
+endif
+
+
+all:
+	make main
+	make clean

@@ -23,36 +23,36 @@ void *UnTypedMP::GetVar() { return var; }
 
 ////////////////////////////////
 
-AnyType::AnyType() : var(0) {}
-AnyType::AnyType(const AnyType &a) : var(new UnTypedMP(*(a.var))) {}
+AnyType::AnyType() : ptr(0) {}
+AnyType::AnyType(const AnyType &a) : ptr(new UnTypedMP(*(a.ptr))) {}
 
 AnyType::~AnyType()
 {
-    if (var)
-        delete var;
+    if (ptr)
+        delete ptr;
 }
 
 AnyType &AnyType::operator=(const AnyType &a)
 {
     if (this != &a)
     {
-        if (var)
-            delete var;
-        var = new UnTypedMP(*(a.var));
+        if (ptr)
+            delete ptr;
+        ptr = new UnTypedMP(*(a.ptr));
     }
     return *this;
 }
 
 void AnyType::Destroy() // destroy object
 {
-    if (var)
-        delete var;
+    if (ptr)
+        delete ptr;
 }
 void AnyType::Swap(AnyType &a) // Swap 2 AnyTypes objects
 {
-    UnTypedMP *tmp = a.var;
-    a.var = var;
-    var = tmp;
+    UnTypedMP *tmp = a.ptr;
+    a.ptr = ptr;
+    ptr = tmp;
 }
 
 bool AnyType::ToBool()
@@ -117,7 +117,7 @@ double AnyType::ToDouble()
 template <class T>
 T AnyType::ToSomeType()
 {
-    if (std::string(typeid(T).name()) != var->type)
+    if (std::string(typeid(T).name()) != ptr->type)
         throw ExceptionType();
-    return *(T *)var->GetVar();
+    return *(T *)ptr->GetVar();
 }
