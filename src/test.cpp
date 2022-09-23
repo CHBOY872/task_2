@@ -1,9 +1,11 @@
 #include <stdio.h> // for fprintf
+#include <gtest/gtest.h>
 #include "AnyType.hpp"
 #include "Exception.hpp"
 
-int main()
+TEST(MainTest, Test)
 {
+    EXPECT_THROW({
     try
     {
         AnyType y = 90;
@@ -16,11 +18,17 @@ int main()
     catch (ExceptionType &a)
     {
         fprintf(stderr, "%s\n", a.GetMsg());
+        throw;
     }
     catch (...)
     {
-        fprintf(stderr, "Unknown exception...\n");
+        FAIL();
     }
+    }, ExceptionType);
+}
 
-    return 0;
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
