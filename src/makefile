@@ -5,7 +5,7 @@ ISOSTD=-std=c++11
 CPP=g++
 CPPFLAGS=-Wall -g
 
-CPPSRCMODULES=$(shell find . -name '*.cpp' | grep -v 'main.cpp')
+CPPSRCMODULES=$(shell find . -name '*.cpp' | grep -v 'main.cpp' | grep -v 'test.cpp')
 CPPHEDMODULES=$(CPPSRCMODULES:.cpp=.hpp)
 CPPOBJMODULES=$(CPPSRCMODULES:.cpp=.o)
 

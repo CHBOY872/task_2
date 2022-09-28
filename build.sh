@@ -11,7 +11,7 @@ else
     case "$1" in
         test)
             cd src
-            make test
+            make runtest
 	    if [ "0" -eq "$?" ]
 	    then
                 cd ..

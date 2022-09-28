@@ -3,6 +3,25 @@
 #include "AnyType/AnyType.hpp"
 #include "Exception/Exception.hpp"
 
+int main_func()
+{
+    try
+    {
+        AnyType x = 90;
+        int y = x.ToInt();
+        printf("%d\n", y);
+    }
+    catch (ExceptionType &a)
+    {
+        fprintf(stderr, "%s\n", a.GetMsg());
+        throw;
+    }
+    catch (...)
+    {
+    }
+    return 0;
+}
+
 TEST(MainTest, ThrowExceptionTest)
 {
     EXPECT_THROW({
@@ -30,25 +49,7 @@ TEST(MainTest, ThrowExceptionTest)
 
 TEST(MainTest, NoThrowExceptionTest)
 {
-    int main_func()
-    {
-        try
-        {
-            AnyType x = 90;
-            int y = x.ToInt();
-        }
-        catch (ExceptionType &a)
-        {
-            fprintf(stderr, "%s\n", a.GetMsg());
-            throw;
-        }
-        catch (...)
-        {
-            FAIL();
-        }
-        return 0;
-    }
-    ASSERT_EQ(main_func(), 0);
+    ASSERT_EQ(0, main_func());
 }
 
 int main(int argc, char **argv)
