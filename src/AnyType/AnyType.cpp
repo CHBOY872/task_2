@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "AnyType.hpp"
-#include "Exception.hpp"
+#include "../Exception/Exception.hpp"
 
 UnTypedMP::UnTypedMP(const char *_type, unsigned char _size)
     : var(malloc(_size)), size(_size)

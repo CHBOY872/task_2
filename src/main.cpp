@@ -1,6 +1,6 @@
 #include <stdio.h> // for fprintf
-#include "AnyType.hpp"
-#include "Exception.hpp"
+#include "AnyType/AnyType.hpp"
+#include "Exception/Exception.hpp"
 
 int main()
 {
